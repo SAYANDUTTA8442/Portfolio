@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102b46">
+<meta name="description" content="A passenger report describing a recurring RailOne unreserved ticket booking issue: booking appears successful, but the ticket is missing from My Tickets.">
+<title>RailOne App — Unreserved Ticket Issue</title>
+<style>
+:root{color-scheme:light;--navy:#102b46;--blue:#155eef;--red:#b42318;--ink:#172b3a;--muted:#5b6b7a;--line:#dce4ec;--bg:#f3f6fa;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--navy);color:white;padding:44px 20px 52px;border-bottom:5px solid #f5b335}
+.wrap{width:min(900px,100% - 32px);margin:auto}.eyebrow{font-size:.8rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:#d5e5ff}
+h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin:12px 0}header p{max-width:700px;color:#e1eaf5;margin:16px 0 0}
+main{padding:28px 0 54px}.notice{border:1px solid #f3c5c1;background:#fff3f2;border-radius:12px;padding:18px 20px;margin-bottom:22px}.notice strong{color:var(--red)}
+section,.summary{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px;margin:18px 0;box-shadow:0 3px 12px #102b4608}
+h2{font-size:1.25rem;line-height:1.3;margin:0 0 12px;color:var(--navy)}p{margin:10px 0}ul,ol{padding-left:24px}li{margin:8px 0}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding-left:48px;margin:18px 0}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#eaf1ff;color:var(--blue);font-weight:800}
+.quote{border-left:4px solid #f5b335;background:#fff9e9;padding:14px 18px;border-radius:0 8px 8px 0;font-weight:650}
+.tag{display:inline-block;border-radius:999px;padding:4px 10px;background:#fff0df;color:#8a3c08;font-size:.8rem;font-weight:750}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.btn{display:inline-block;text-decoration:none;border-radius:9px;padding:11px 16px;font-weight:750;background:var(--blue);color:white}.btn.secondary{background:white;border:1px solid var(--line);color:var(--navy)}
+.small{font-size:.9rem;color:var(--muted)}footer{padding:24px 16px;text-align:center;color:var(--muted);border-top:1px solid var(--line)}a{overflow-wrap:anywhere}
+@media(max-width:560px){header{padding:34px 0 38px}section,.summary{padding:19px}.wrap{width:min(100% - 24px,900px)}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="eyebrow">Passenger issue report · RailOne</div>
+<h1>Unreserved ticket booking succeeds, but the ticket is missing</h1>
+<p>A recurring issue where the app appears to complete a booking, yet the ticket is not visible in <strong>My Tickets</strong> and another booking for the same route is temporarily blocked.</p>
+</div></header>
+<main class="wrap">
+<div class="notice"><strong>Issue requiring attention:</strong> A successful-looking booking is not reflected in the passenger's ticket list, while the app still reports that a ticket was booked within the previous 10 minutes. This leaves the passenger uncertain about ticket validity and the payment.</div>
+<div class="summary">
+<span class="tag">Recurring issue reported by passenger</span>
+<h2 style="margin-top:12px">Summary</h2>
+<p>On multiple occasions, I have experienced this behaviour while booking an unreserved ticket through the RailOne app. Initially, I assumed it was a temporary technical glitch. Since the behaviour has repeated, I am requesting a technical investigation and resolution.</p>
+<ul>
+<li><strong>App:</strong> RailOne</li>
+<li><strong>Journey type:</strong> Unreserved ticket</li>
+<li><strong>Visible booking result:</strong> Booking appears successful</li>
+<li><strong>Ticket visibility:</strong> Ticket is missing from “My Tickets”</li>
+<li><strong>Retry behaviour:</strong> The same route is blocked with a “Ticket already booked within the last 10 minutes” message</li>
+</ul>
+</div>
+<section><h2>What happens</h2>
+<ol class="steps">
+<li>I attempt to book an unreserved ticket for my intended route using the RailOne app.</li>
+<li>The app indicates that the booking has succeeded.</li>
+<li>I open <strong>My Tickets</strong>, but the newly booked ticket is not available there.</li>
+<li>If I try to book another ticket for the same route, the app reports: <div class="quote">“Ticket already booked within the last 10 minutes.”</div></li>
+<li>I am left unable to retrieve the ticket or confidently determine the final booking and payment status from the app.</li>
+</ol>
+</section>
+<section><h2>Why this is a serious usability issue</h2>
+<ul>
+<li><strong>Uncertainty during travel:</strong> A passenger cannot easily confirm whether they hold a valid ticket.</li>
+<li><strong>Risk of duplicate payment:</strong> The missing ticket may prompt a passenger to attempt another payment or booking.</li>
+<li><strong>Blocked recovery:</strong> The 10-minute restriction prevents an immediate retry, even though the ticket is not visible.</li>
+<li><strong>Trust and accountability:</strong> The app should clearly communicate the booking outcome and provide a reliable way to retrieve the ticket or track a refund.</li>
+</ul>
+</section>
+<section><h2>Possible technical area to investigate</h2>
+<p>One possible explanation is a consistency or synchronisation problem between the booking response, ticket retrieval service, cache, and persistent database. For example, Redis-backed state and database records could become temporarily inconsistent. This is only a hypothesis based on the observed behaviour—not a confirmed diagnosis of RailOne's implementation.</p>
+<p>I request that the technical team verify:</p>
+<ul>
+<li>Whether the booking transaction was committed and a ticket/PNR or equivalent ticket identifier was generated.</li>
+<li>Whether the “My Tickets” endpoint reads from a stale cache or fails to return the committed booking.</li>
+<li>Whether the 10-minute duplicate-booking guard is triggered by a cache key or booking record even when the ticket is unavailable to the user.</li>
+<li>Whether booking status, payment status, ticket issuance and refund status are reconciled correctly after timeouts or partial failures.</li>
+<li>Whether appropriate retry handling, idempotency and monitoring are in place to prevent this mismatch.</li>
+</ul>
+</section>
+<section><h2>Resolution requested</h2>
+<ol>
+<li><strong>Investigate and fix</strong> the missing-ticket and duplicate-booking restriction behaviour.</li>
+<li><strong>Verify my booking and payment status</strong> using the official transaction records.</li>
+<li><strong>Process an eligible refund</strong> if the amount was debited and no valid ticket was issued, and provide the refund reference/status.</li>
+<li><strong>Improve recovery and messaging</strong> so passengers can retrieve a confirmed ticket or understand what action to take when a booking is pending or failed.</li>
+<li><strong>Confirm the outcome</strong> and advise if any additional transaction information is required through an official support channel.</li>
+</ol>
+</section>
+<section><h2>Contact and follow-up</h2>
+<p>I am available to provide further clarification and supporting details through a private, official support channel. For passenger privacy, I have not published payment credentials, personal identifiers or a phone number on this public page.</p>
+<p>To help investigate, support may request the booking date and time, route, amount, payment reference or UPI transaction ID, app version, and screenshots. These details should be shared only through an official secure channel.</p>
+<div class="actions">
+<a class="btn" href="https://railmadad.indianrailways.gov.in/">RailMadad — official grievance portal</a>
+<a class="btn secondary" href="https://www.indianrailways.gov.in/">Indian Railways website</a>
+</div>
+<p class="small">Please do not send OTPs, UPI PINs, passwords, full card details or other authentication secrets to anyone claiming to investigate this issue.</p>
+</section>
+<section><h2>Important note</h2>
+<p>This page documents my personal experience and the behaviour displayed by the app. It does not claim access to RailOne's internal systems or establish the root cause. The cache/database explanation above is a technical possibility for the responsible team to verify.</p>
+</section>
+</main>
+<footer><div class="wrap">RailOne passenger issue report · Prepared to support investigation and resolution.</div></footer>
+</body>
+</html>
